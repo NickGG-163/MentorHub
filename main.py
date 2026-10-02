@@ -1,3 +1,6 @@
+import json
+
+
 def add_goal(goals):
     goal_name = input('Введите название цели: ')
     if goal_name in goals:
@@ -23,7 +26,13 @@ def print_goals(goals):
         return
 
     for goal_name, tasks in goals.items():
-        print(f'\nЦель: {goal_name}')
+
+        progress = 0
+        if tasks:
+            progress = round(
+                len([t for t in tasks if t['done']]) / len(tasks) * 100, 1)
+
+        print(f'\nЦель: {goal_name} -> {progress}%')
 
         if not tasks:
             print('  Задач пока нет')
@@ -31,9 +40,9 @@ def print_goals(goals):
 
         for task in tasks:
             if task['done']:
-                print(f'  - {task['title']}  [V]')
+                print(f' [X] - {task['title']}')
             else:
-                print(f'  - {task['title']}')
+                print(f' [ ] - {task['title']}')
 
 
 def get_task_done(goals):
@@ -54,8 +63,22 @@ def get_task_done(goals):
         print('Такой задачи не существует')
 
 
+def save_goals(goals, file):
+    json.dump(goals, file, ensure_ascii=False, indent=2)
+
+
 def run_cli():
-    goals = {}
+    filename = 'data.json'
+
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            goals = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError) as error:
+        if isinstance(error, FileNotFoundError):
+            print('Файл data.json не был найден, начинаем с пустого списка')
+        elif isinstance(error, json.JSONDecodeError):
+            print('Не удалось прочитать data.json, начинаем с пустого списка')
+        goals = {}
 
     while True:
         command = input('\nВведите команду: ').lower()
@@ -73,6 +96,10 @@ def run_cli():
             get_task_done(goals)
 
         elif command == 'exit':
+
+            with open(filename, 'w', encoding='utf-8') as file:
+                save_goals(goals, file)
+
             print('Программа завершается')
             break
 

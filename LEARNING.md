@@ -14,3 +14,16 @@
 
 Что дальше:
 - Создать удалённый репозиторий и пройти branch/PR workflow
+
+
+
+Этап 01 — Базовый Python
+
+Реализовал CLI MentorHub 0.1.
+Практика:
+- dict/list и вложенные структуры;
+- функции;
+- работа с файлами через with;
+- json.dump/json.load;
+- FileNotFoundError и JSONDecodeError;
+- сохранение состояния между запусками.
