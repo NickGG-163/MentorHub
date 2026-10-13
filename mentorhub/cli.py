@@ -1,25 +1,25 @@
-from mentorhub.domain import DoneStatus, add_goal, add_task, calc_progress, get_task_done
+from mentorhub.domain import DoneStatus, add_goal, add_task, get_task_done
+from mentorhub.models import Goal
 from mentorhub.storage import OpenStatus, open_goals, save_goals
 
 
-def print_goals(goals):
+def print_goals(goals: dict[str, Goal]):
     if not goals:
         print('Список целей пуст')
         return
 
-    for goal_name, tasks in goals.items():
-        progress = calc_progress(tasks)
-        print(f'\nЦель: {goal_name} -> {progress}%')
+    for goal in goals.values():
+        print(f'\nЦель: {goal.title} -> {goal.progress}%')
 
-        if not tasks:
+        if not goal.tasks:
             print('  Задач пока нет')
             continue
 
-        for task in tasks:
-            if task['done']:
-                print(f' [X] - {task['title']}')
+        for task in goal.tasks:
+            if task.done:
+                print(f' [X] - {task.title}')
             else:
-                print(f' [ ] - {task['title']}')
+                print(f' [ ] - {task.title}')
 
 
 def add_goal_cli(goals):
