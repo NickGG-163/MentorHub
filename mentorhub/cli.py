@@ -1,6 +1,6 @@
 from mentorhub.domain import DoneStatus, add_goal, add_task, get_task_done
 from mentorhub.models import Goal
-from mentorhub.storage import OpenStatus, open_goals, save_goals
+from mentorhub.storage_base import Storage, StorageDecodeError, StorageNotFoundError, StorageSaveDataError
 
 
 def print_goals(goals: dict[str, Goal]):
@@ -54,20 +54,15 @@ def get_task_done_cli(goals):
         print('Задача отмечена выполненной')
 
 
-def open_goals_cli(filename):
-    goals, res = open_goals(filename)
-    if res is OpenStatus.SUCCESS:
-        return goals
-    elif res is OpenStatus.NOT_FOUND_ERROR:
-        print('Файл data.json не был найден, начинаем с пустого списка')
-    elif res is OpenStatus.DECODE_ERROR:
-        print('Не удалось прочитать data.json, начинаем с пустого списка')
-    return goals
-
-
-def run_cli():
-    filename = 'data.json'
-    goals = open_goals_cli(filename)
+def run_cli(storage: Storage):
+    try:
+        goals = storage.load()
+    except StorageNotFoundError:
+        goals = {}
+        print('Хранилище не было найдено, начинаем с пустого списка')
+    except StorageDecodeError:
+        goals = {}
+        print('Не удалось прочитать данные хранилища, начинаем с пустого списка')
 
     while True:
         command = input('\nВведите команду: ').lower()
@@ -85,8 +80,12 @@ def run_cli():
             print_goals(goals)
 
         elif command == 'exit':
-            save_goals(goals, filename)
-            break
+            try:
+                storage.save(goals)
+                break
+            except StorageSaveDataError:
+                print('Не удалось сохранить данные. Повторите ввод команды.')
+                continue
 
         else:
             print('Команда неизвестна, повторите ввод')
