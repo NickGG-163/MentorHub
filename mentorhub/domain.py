@@ -1,4 +1,5 @@
 from enum import Enum
+
 from mentorhub.models import Goal, Task
 
 
