@@ -1,6 +1,6 @@
 Название учебного проекта:
 MentorHub
-Version: 0.1"
+Version: 0.2"
 
 Описание:
 Task-tracker
