@@ -23,3 +23,9 @@ __pycache__/
 
 # Локальная пользовательская data
 data.json
+
+# Метаданные setuptools из project.toml
+*.egg-info/
+
+# Кэш Ruff
+.ruff_cache/

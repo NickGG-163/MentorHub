@@ -9,12 +9,16 @@ Task-tracker
 Практика для собеседований и практика для "потрогать технологии руками"
 
 Требования к окружению:
-Python 3.13.7
+Python >= 3.10
 
-Последовательность действий от клонированного репозитория до запуска:
+Последовательность действий от клонированного репозитория до запуска (Development setup / Запуск для разработки):
 python3 -m venv .venv
 source .venv/bin/activate
-python main.py
+python3 -m pip install -e .
+python3 -m pip install --group dev 
+mentorhub
+ruff check . 
+ruff format --check .
 
 Возможности:
 - создание целей;

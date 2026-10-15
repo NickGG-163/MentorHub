@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class Task():
+class Task:
     title: str
     done: bool = False
 
@@ -11,7 +11,7 @@ class Task():
 
 
 @dataclass
-class Goal():
+class Goal:
     title: str
     tasks: list[Task] = field(default_factory=list)
 
@@ -24,7 +24,8 @@ class Goal():
 
         if self.tasks:
             progress = round(
-                len([t for t in self.tasks if t.done]) / len(self.tasks) * 100, 1)
+                len([t for t in self.tasks if t.done]) / len(self.tasks) * 100, 1
+            )
 
         return progress
 
