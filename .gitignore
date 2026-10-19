@@ -29,3 +29,9 @@ data.json
 
 # Кэш Ruff
 .ruff_cache/
+
+# Кэш Pytest
+.pytest_cache/
+
+# Служебная база результатов покрытия
+.coverage

@@ -19,6 +19,9 @@ def add_goal(goals: dict[str, Goal], goal_name: str) -> bool:
 def add_task(goals: dict[str, Goal], goal_name: str, task_name: str) -> bool:
     if goal_name not in goals:
         return False
+    for task in goals[goal_name].tasks:
+        if task.title == task_name:
+            return False
     goals[goal_name].add_task(Task(task_name))
     return True
 
