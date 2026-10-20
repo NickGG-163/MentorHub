@@ -20,7 +20,7 @@ class Goal:
 
     @property
     def progress(self) -> int | float:
-        progress = 0
+        progress: int | float = 0
 
         if self.tasks:
             progress = round(

@@ -35,3 +35,6 @@ data.json
 
 # Служебная база результатов покрытия
 .coverage
+
+# Кэш Mypy
+.mypy_cache/
