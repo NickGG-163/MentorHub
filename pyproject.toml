@@ -1,6 +1,6 @@
 [project]
 name = "mentorhub"
-version = "0.2.0"
+version = "0.3.0"
 requires-python = ">=3.10"
 
 [build-system]
@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 mentorhub = "mentorhub.__main__:main"
 
 [dependency-groups]
-dev = ["ruff", ]
+dev = ["ruff", "mypy", "pytest", "coverage"]
 
 [tool.ruff]
 target-version = "py310"
@@ -19,3 +19,6 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pytest.ini_options]
+markers = ['unit: Unit tests for isolated business logic', ]

@@ -1,6 +1,6 @@
 Название учебного проекта:
 MentorHub
-Version: 0.2"
+Version: 0.3.0"
 
 Описание:
 Task-tracker
@@ -17,8 +17,9 @@ source .venv/bin/activate
 python3 -m pip install -e .
 python3 -m pip install --group dev 
 mentorhub
-ruff check . 
-ruff format --check .
+
+## Команда в bash для проверки качества и тестирования (&& - оператор, позволяющий запустить следующую проверку только после успешного прохождения предыдущей):
+ruff format --check && ruff check . && mypy mentorhub && pytest -v
 
 Возможности:
 - создание целей;

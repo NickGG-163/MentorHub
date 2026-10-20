@@ -43,7 +43,7 @@ def add_task_cli(goals):
     if created:
         print("Задача добавлена")
     else:
-        print("Такой цели нет")
+        print("Ошибка ввода цели/задачи")
 
 
 def get_task_done_cli(goals):
