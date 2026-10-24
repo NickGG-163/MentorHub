@@ -1,9 +1,9 @@
 from mentorhub.cli import run_cli
-from mentorhub.storage import JsonStorage
+from mentorhub.postrgres_storage import PostgresStorage
 
 
 def main():
-    storage = JsonStorage("data.json")
+    storage = PostgresStorage()
     run_cli(storage)
 
 
