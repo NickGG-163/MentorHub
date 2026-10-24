@@ -134,3 +134,72 @@
 ### Результат
 
 MentorHub 0.4.0 поддерживает CLI и HTTP API. Сервер принимает запросы, обрабатывает их через существующую бизнес-логику и сохраняет состояние в JSON-хранилище.
+
+
+## Этап 05 - PostreSQL, SQLAlchemy и Alembic
+
+### Изучено и реализовано
+
+**PostgreSQL и SQL**
+
+- Создание и изменение таблиц через DDL.
+- PRIMARY KEY, FOREIGN KEY, UNIQUE, составные ключи.
+- INNER JOIN, LEFT JOIN и связи 1:N / M:N.
+- Агрегации, GROUP BY, FILTER, CTE.
+- Индексы и анализ производительности через EXPLAIN ANALYZE BUFFERS.
+- Транзакции, COMMIT, ROLLBACK, уровни изоляции.
+- SQL Injection и параметризованные запросы.
+- Резервное копирование через pg_dump и основы восстановления.
+
+**Psycopg 3**
+
+- Подключение Python к PostgreSQL.
+- Выполнение параметризованных SQL-запросов.
+- Использование cursor, execute, fetchone, fetchall.
+- INSERT ... RETURNING и ON CONFLICT.
+- Работа с транзакциями через контекстные менеджеры.
+- Перенос данных из JSON в PostgreSQL.
+- Реализация PostgresStorage через интерфейс Storage.
+
+**SQLAlchemy ORM**
+
+- Engine и Session.
+- DeclarativeBase, Mapped, mapped_column.
+- ORM-модели и двусторонние relationship.
+- ForeignKey и UniqueConstraint.
+- SELECT, INSERT, UPDATE, DELETE через ORM.
+- Жизненный цикл транзакции: add, flush, commit, rollback.
+- Dirty Checking — автоматическое отслеживание изменений ORM-объектов.
+- Lazy Loading, selectinload и joinedload.
+- Причины возникновения N+1 и способы предотвращения.
+
+**Alembic**
+
+- Инициализация и конфигурация Alembic.
+- Связь Alembic с SQLAlchemy metadata.
+- Автоматическая генерация миграций.
+- Начальная миграция существующей схемы (baseline).
+- Регистрация версии через stamp.
+- Применение и откат миграций через upgrade и downgrade.
+- Проверка соответствия схем через alembic check.
+- Добавление столбца description без потери существующих записей.
+
+### Что могу объяснить
+
+- Чем SQLAlchemy ORM отличается от прямой работы через Psycopg.
+- Как связаны Python-объекты и строки PostgreSQL.
+- Почему relationship не заменяет ForeignKey.
+- Чем flush отличается от commit.
+- Как ORM формирует SQL-запросы.
+- Почему возникает N+1 и как работает selectinload.
+- Зачем нужны миграции и почему схема БД должна версионироваться.
+- Чем revision, upgrade, downgrade и stamp отличаются друг от друга.
+- Как заменить реализацию хранилища без изменения доменной логики.
+
+### Практический результат
+
+MentorHub работает с PostgreSQL через PostgresStorage. Выполнен импорт JSON-данных, реализовано сохранение связанных сущностей и проверены операции через CLI.
+
+Созданы ORM-модели и миграции Alembic, протестированы чтение, создание, изменение, удаление и откат транзакций.
+
+Pytest: 15 тестов пройдены.
