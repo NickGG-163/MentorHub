@@ -29,8 +29,10 @@ class GoalORM(Base):
     title: Mapped[str] = mapped_column(Text, unique=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    tasks: Mapped[list["TaskORM"]] = relationship(back_populates="goal")
-    users: Mapped[list["GoalMemberORM"]] = relationship(back_populates="goal")
+    tasks: Mapped[list["TaskORM"]] = relationship(
+        back_populates="goal", cascade='all, delete-orphan')
+    users: Mapped[list["GoalMemberORM"]] = relationship(
+        back_populates="goal", cascade='all, delete-orphan')
 
 
 class TaskORM(Base):
@@ -42,7 +44,8 @@ class TaskORM(Base):
     status_done: Mapped[bool] = mapped_column(
         nullable=False, default=False, server_default=text("False")
     )
-    goal_id: Mapped[int] = mapped_column(ForeignKey("goals.id"), nullable=False)
+    goal_id: Mapped[int] = mapped_column(
+        ForeignKey("goals.id"), nullable=False)
     completed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
