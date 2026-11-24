@@ -1,17 +1,20 @@
-from fastapi.encoders import jsonable_encoder
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from mentorhub.api_schemas import ErrorEnvelope, ErrorInfo
+from mentorhub.goals.goals_router import router_goals
 from mentorhub.health_router import router_health
-from mentorhub.goals_router import router_goals
-
+from mentorhub.tasks.tasks_router import router_tasks
+from mentorhub.users.users_router import router_users
 
 app = FastAPI()
 app.include_router(router_health)
 app.include_router(router_goals)
+app.include_router(router_tasks)
+app.include_router(router_users)
 
 
 @app.exception_handler(RequestValidationError)

@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from mentorhub.database import get_db_session
 
-
 router_health = APIRouter(prefix='/health', tags=['health'])
 
 

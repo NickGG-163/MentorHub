@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from mentorhub.api_schemas import GoalCreate
-from mentorhub.goals_repository import GoalRepository
-from mentorhub.orm_models import GoalORM
+
+from mentorhub.goals.goals_repository import GoalRepository
+from mentorhub.orm_models import GoalMemberORM, GoalORM
 
 
 class GoalService:
@@ -13,9 +13,12 @@ class GoalService:
         goal = self.repository.get_goal_by_id(goal_id)
         return goal
 
-    def create_goal(self, title: str, description: str | None) -> GoalORM:
+    def create_goal(self, title: str, description: str | None, user_id: int) -> GoalORM:
         new_goal = GoalORM(title=title, description=description)
         self.repository.add(new_goal)
+        self.session.flush()
+        goal_member = GoalMemberORM(goal_id=new_goal.id, user_id=user_id)
+        self.repository.add_member(goal_member)
         self.session.commit()
         self.session.refresh(new_goal)
         return new_goal
@@ -29,3 +32,7 @@ class GoalService:
     def delete_goal(self, goal: GoalORM) -> None:
         self.repository.delete(goal)
         self.session.commit()
+
+    def user_has_access(self, goal_id: int, user_id: int) -> bool:
+        res = self.repository.user_has_access(goal_id, user_id)
+        return res

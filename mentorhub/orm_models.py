@@ -55,9 +55,12 @@ class TaskORM(Base):
 
 class UserORM(Base):
     __tablename__ = "users"
+    __table_args__ = (UniqueConstraint("email", name="uq_users_email"),)
 
     id: Mapped[int] = mapped_column(Identity(always=True), primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    email: Mapped[str | None] = mapped_column(Text, nullable=True)
+    password_hash: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     goals: Mapped[list["GoalMemberORM"]] = relationship(back_populates="user")
 
