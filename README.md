@@ -1,6 +1,6 @@
 ## Название учебного проекта:
 MentorHub
-Version: "0.5.0"
+Version: "0.6.0"
 
 ## Описание:
 Task-tracker
@@ -123,3 +123,103 @@ alembic check
 - Ruff — форматирование и статический анализ Python-кода.
 - Интеграционная проверка сохранения и загрузки данных через CLI.
 - Проверка миграций Alembic: upgrade, downgrade, check.
+
+
+## FastAPI Backend — MentorHub 0.6.0
+
+Реализован REST API на FastAPI с хранением данных в PostgreSQL, JWT-аутентификацией и разграничением доступа к целям и задачам.
+
+### Реализовано
+
+- FastAPI: маршрутизация, валидация запросов и формирование HTTP-ответов.
+- Pydantic: схемы создания, обновления и получения данных.
+- Архитектура Router → Service → Repository.
+- SQLAlchemy ORM: работа с PostgreSQL через Session.
+- Регистрация пользователей и безопасное хеширование паролей через Argon2.
+- JWT access tokens с проверкой подписи и срока действия.
+- Dependency Injection через FastAPI Depends.
+- Проверка прав доступа пользователей к целям и связанным задачам.
+- Централизованная обработка HTTP-ошибок.
+- Unit- и интеграционные тесты с pytest.
+
+### Архитектура
+
+- `api.py` — создание FastAPI-приложения, подключение роутеров, обработка ошибок.
+- `api_schemas.py` — Pydantic-схемы запросов и ответов.
+- `goals/` — Router, Service и Repository для целей.
+- `tasks/` — Router, Service и Repository для задач.
+- `users/` — регистрация, авторизация и работа с пользователями.
+- `auth_dependencies.py` — получение текущего пользователя по JWT.
+- `security.py` — хеширование паролей, создание и проверка JWT.
+- `database.py` — SQLAlchemy Engine и управление сессиями.
+- `orm_models.py` — ORM-модели PostgreSQL.
+- `migrations/` — миграции Alembic.
+
+### Запуск FastAPI
+
+Из корня проекта после установки зависимостей и настройки PostgreSQL:
+
+`alembic upgrade head`
+
+Установить JWT_SECRET_KEY в текущем терминале:
+
+`export JWT_SECRET_KEY="$(openssl rand -hex 32)"`
+
+Запустить сервер:
+
+`uvicorn mentorhub.api:app --reload`
+
+Адрес API: `http://127.0.0.1:8000`
+
+Swagger UI: `http://127.0.0.1:8000/docs`
+
+### Доступные endpoints
+
+| Метод | Endpoint | Описание |
+|---|---|---|
+| GET | `/health` | Проверка работоспособности |
+| POST | `/auth/register` | Регистрация пользователя |
+| POST | `/auth/login` | Авторизация и получение JWT |
+| GET | `/auth/me` | Получение текущего пользователя |
+| POST | `/goals` | Создание цели |
+| GET | `/goals/{goal_id}` | Получение цели |
+| PATCH | `/goals/{goal_id}` | Обновление цели |
+| DELETE | `/goals/{goal_id}` | Удаление цели |
+| POST | `/goals/{goal_id}/tasks` | Создание задачи |
+| GET | `/goals/{goal_id}/tasks/{task_id}` | Получение задачи |
+| PATCH | `/goals/{goal_id}/tasks/{task_id}` | Обновление задачи |
+| DELETE | `/goals/{goal_id}/tasks/{task_id}` | Удаление задачи |
+
+Защищённые endpoints требуют заголовок `Authorization: Bearer <JWT>`.
+
+### Аутентификация и права доступа
+
+- Пароли хранятся в виде Argon2-хешей.
+- После успешного входа пользователь получает JWT access token сроком на 30 минут.
+- FastAPI-зависимость `get_current_user` проверяет JWT и получает пользователя из PostgreSQL.
+- Создатель цели автоматически становится её участником.
+- Доступ к целям и задачам ограничивается участием пользователя в цели.
+- Используются HTTP-статусы 401, 403, 404, 409 и 422.
+
+### Тестирование
+
+- Unit-тесты с Mock и dependency_overrides.
+- Интеграционные тесты с PostgreSQL.
+- Изоляция тестов через savepoint и rollback.
+- Pytest — 26 успешных тестов.
+- Ruff — проверка без ошибок.
+
+Команды:
+
+`pytest -q`
+
+`ruff check .`
+
+Для интеграционных тестов используется отдельная база `mentorhub_test`.
+
+### Отложенные задачи
+
+- Middleware: логирование HTTP-запросов и измерение времени обработки.
+- Дополнительные интеграционные тесты авторизации с настоящими JWT.
+- Централизованная конфигурация PostgreSQL и JWT.
+- Финальная проверка пограничных случаев и обработка отдельных ошибок.
