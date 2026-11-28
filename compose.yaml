@@ -1,0 +1,27 @@
+services:
+  mentorhub:
+    image: mentorhub:dev
+    build: ./
+    ports: 
+      - "127.0.0.1:8000:8000"
+    environment:
+      - "JWT_SECRET_KEY"
+      - "DATABASE_URL=postgresql+psycopg://mentorhub:${POSTGRES_PASSWORD}@db:5432/mentorhub"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: mentorhub
+      POSTGRES_DB: mentorhub
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "mentorhub", "-d", "mentorhub"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+volumes:
+  postgres_data:

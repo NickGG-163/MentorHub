@@ -173,6 +173,28 @@ alembic check
 
 Swagger UI: `http://127.0.0.1:8000/docs`
 
+### Локальный запуск через Docker Compose
+
+Запусти Docker Desktop. Из корня свежего клона создай локальный файл настроек:
+
+```bash
+cp .env.example .env
+```
+
+Укажи в `.env` свой `POSTGRES_PASSWORD`. Для локального запуска подойдёт пароль из букв и цифр.
+
+Выполни команды по порядку в одной вкладке терминала:
+
+```bash
+export JWT_SECRET_KEY="$(openssl rand -hex 32)"
+docker compose up --wait db
+docker compose run --build --rm mentorhub alembic upgrade head
+docker compose up -d mentorhub
+curl -i --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/health
+```
+
+Ожидаемый ответ — `HTTP/1.1 200 OK` и `{"status":"ok"}`.
+
 ### Доступные endpoints
 
 | Метод | Endpoint | Описание |
