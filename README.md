@@ -195,6 +195,28 @@ curl -i --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/heal
 
 Ожидаемый ответ — `HTTP/1.1 200 OK` и `{"status":"ok"}`.
 
+Чтобы найти запись о запросе в логах приложения:
+
+```bash
+docker compose logs --tail=30 mentorhub
+```
+
+В JSON-записи `request_completed` для `GET /health` поле `request_id`
+совпадает со значением заголовка `X-Request-ID` из HTTP-ответа.
+
+Если Docker сообщает, что порт `8000` уже занят, проверьте через `docker ps`,
+какой контейнер публикует этот порт. После освобождения порта пересоздайте
+контейнер приложения командой `docker compose up -d --force-recreate mentorhub`.
+
+### CI
+
+GitHub Actions запускает юнит-тесты для pull request и при пуше в `main`.
+Ту же проверку можно запустить локально после установки dev-зависимостей:
+
+```bash
+python -m pytest -m unit -q
+```
+
 ### Доступные endpoints
 
 | Метод | Endpoint | Описание |
